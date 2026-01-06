@@ -1,1 +1,38 @@
-<!DOCTYPE html><html><body><h2>Послуги</h2><a href='index.html'>← Назад</a></body></html>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Послуги</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="card">
+<h2>🛎 Послуги</h2>
+
+<button onclick="buy('Їжа',10)">🍔 Їжа −10</button>
+<button onclick="buy('Вода',5)">💧 Вода −5</button>
+<button onclick="buy('Кола',12)">🥤 Кола −12</button>
+<button onclick="buy('Цукерка',3)">🍬 Цукерка −3</button>
+<button onclick="buy('Банан',7)">🍌 Банан −7</button>
+<button onclick="buy('Мандарини',8)">🍊 Мандарини −8</button>
+
+<hr>
+
+<h3>🔥 Кайф зона</h3>
+<button onclick="buy('Місце',60)">🪑 1 місце −60</button>
+<button onclick="buy('Принести з кухні',120)">🍽 −120</button>
+
+<hr>
+
+<h3>💆 Сервіси</h3>
+<button onclick="buy('Масаж',150)">💆 Масаж −150</button>
+
+<br><br>
+<button onclick="go('index.html')">⬅ Назад</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
