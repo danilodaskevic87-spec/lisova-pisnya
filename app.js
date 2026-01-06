@@ -26,7 +26,7 @@ async function login(){
   await loadBankUser(data.user);
 }
 
-// ===== LOAD / CREATE BANK USER =====
+// ===== LOAD / CREATE USER =====
 async function loadBankUser(user){
   let { data } = await sb
     .from("bank")
@@ -47,35 +47,39 @@ async function loadBankUser(user){
 
   currentUser = data;
 
-  const lb=document.getElementById("loginBox");
-  const ub=document.getElementById("userBox");
-  if(lb) lb.style.display="none";
-  if(ub) ub.classList.remove("hidden");
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("userBox").classList.remove("hidden");
 
   set("name", data.name);
   set("idd", data.idd);
   set("balance", data.balance);
 }
 
-// ===== GET FRESH BALANCE =====
+// ===== ALWAYS FRESH BALANCE =====
 async function getFreshBalance(){
-  const { data } = await sb
+  const { data, error } = await sb
     .from("bank")
     .select("balance")
     .eq("user_id", currentUser.user_id)
     .single();
+
+  if(error || data.balance === null || data.balance === undefined){
+    return 0;
+  }
   return Number(data.balance);
 }
 
-// ===== BUY SERVICE =====
+// ===== BUY =====
 async function buy(price){
   const bal = await getFreshBalance();
-  if(bal < price){
+
+  if(bal <= 0 || bal < price){
     alert("❌ Недостатньо коштів");
     return;
   }
 
   const newBal = bal - price;
+
   await sb.from("bank")
     .update({ balance:newBal })
     .eq("user_id", currentUser.user_id);
@@ -96,7 +100,7 @@ async function transfer(){
   }
 
   const bal = await getFreshBalance();
-  if(bal < sum){
+  if(bal <= 0 || bal < sum){
     alert("❌ Недостатньо коштів");
     return;
   }
