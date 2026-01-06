@@ -3,22 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Переказ</title>
-<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<div class="card">
 <h2>💸 Переказ</h2>
 
-<input id="toId" placeholder="ID отримувача">
-<input id="amount" type="number" placeholder="Сума">
+<input id="toIdd" placeholder="ID отримувача">
+<input id="sum" type="number" placeholder="Сума">
 
 <button onclick="transfer()">Переказати</button>
-
-<br><br>
-<button onclick="go('index.html')">⬅ Назад</button>
-</div>
+<button onclick="back()">⬅ Назад</button>
 
 <script src="app.js"></script>
 </body>
