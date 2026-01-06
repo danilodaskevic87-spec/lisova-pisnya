@@ -1,1 +1,25 @@
-<!DOCTYPE html><html><body><h2>Переказ</h2><a href='index.html'>← Назад</a></body></html>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Переказ</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="card">
+<h2>💸 Переказ</h2>
+
+<input id="toId" placeholder="ID отримувача">
+<input id="amount" type="number" placeholder="Сума">
+
+<button onclick="transfer()">Переказати</button>
+
+<br><br>
+<button onclick="go('index.html')">⬅ Назад</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
