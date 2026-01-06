@@ -3,119 +3,80 @@ const sb = supabase.createClient(
   "sb_publishable_LU94dUJoW2jwZJ9WIdfsMw_lEnMQobx"
 );
 
-// === AUTO LOGIN ===
+let currentUser = null;
+
+// === АВТОЛОГІН ===
 document.addEventListener("DOMContentLoaded", async () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { data:{ user } } = await sb.auth.getUser();
   if(user){
-    showUser(user);
+    await loadBankUser(user);
   }
 });
 
-// === LOGIN ===
+// === LOGIN (AUTH) ===
 async function login(){
-  const email = emailInput().value;
-  const password = passInput().value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-  const { data } = await sb
-    .from("bank")
-    .select("*")
-    .eq("email", email)
-    .eq("password", password)
-    .single();
+  const { data, error } = await sb.auth.signInWithPassword({
+    email,
+    password
+  });
 
-  if(!data){
-    alert("Невірні дані");
+  if(error){
+    alert("❌ Невірний email або пароль");
     return;
   }
 
-  localStorage.setItem("user", JSON.stringify(data));
-  showUser(data);
+  await loadBankUser(data.user);
 }
 
-// === SHOW USER ===
-function showUser(user){
-  const lb = document.getElementById("loginBox");
-  const ub = document.getElementById("userBox");
-  if(lb) lb.style.display = "none";
-  if(ub) ub.classList.remove("hidden");
+// === LOAD / CREATE BANK USER ===
+async function loadBankUser(user){
+  // шукаємо в bank
+  let { data, error } = await sb
+    .from("bank")
+    .select("*")
+    .eq("user_id", user.id)
+    .single();
 
-  set("name", user.name || "—");
-  set("idd", user.idd);
-  set("balance", user.balance);
+  // якщо НЕМАЄ — створюємо
+  if(!data){
+    const newIdd = Math.floor(100000 + Math.random() * 900000);
+
+    const { data: created } = await sb.from("bank").insert({
+      user_id: user.id,
+      name: user.email.split("@")[0],
+      idd: newIdd,
+      balance: 0,
+      is_admin: false,
+      is_vip_user: false
+    }).select().single();
+
+    data = created;
+  }
+
+  currentUser = data;
+
+  // показуємо UI
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("userBox").classList.remove("hidden");
+
+  document.getElementById("name").innerText = data.name;
+  document.getElementById("idd").innerText = data.idd;
+  document.getElementById("balance").innerText = data.balance;
 }
 
 // === LOGOUT ===
-function logout(){
-  localStorage.clear();
-  location.href = "index.html";
+async function logout(){
+  await sb.auth.signOut();
+  location.reload();
 }
 
-// === BUY SERVICE ===
-async function buy(price){
-  const user = getUser();
-  if(user.balance < price){
-    alert("Недостатньо коштів");
-    return;
-  }
+// === НАВІГАЦІЯ ===
+function go(p){ location.href = p; }
 
-  const newBalance = user.balance - price;
-
-  await sb.from("bank")
-    .update({ balance: newBalance })
-    .eq("idd", user.idd);
-
-  user.balance = newBalance;
-  localStorage.setItem("user", JSON.stringify(user));
-  alert("Успішно!");
-}
-
-// === TRANSFER ===
-async function transfer(){
-  const toIdd = document.getElementById("toIdd").value;
-  const sum = Number(document.getElementById("sum").value);
-  const user = getUser();
-
-  if(sum <= 0 || user.balance < sum){
-    alert("Помилка суми");
-    return;
-  }
-
-  const { data: target } = await sb
-    .from("bank")
-    .select("*")
-    .eq("idd", toIdd)
-    .single();
-
-  if(!target){
-    alert("Користувача не знайдено");
-    return;
-  }
-
-  await sb.from("bank")
-    .update({ balance: user.balance - sum })
-    .eq("idd", user.idd);
-
-  await sb.from("bank")
-    .update({ balance: target.balance + sum })
-    .eq("idd", toIdd);
-
-  user.balance -= sum;
-  localStorage.setItem("user", JSON.stringify(user));
-  alert("Переказ успішний!");
-}
-
-// === HELPERS ===
-function getUser(){
-  return JSON.parse(localStorage.getItem("user"));
-}
-function set(id,val){
-  const el=document.getElementById(id);
-  if(el) el.innerText=val;
-}
-function go(p){location.href=p}
-function back(){history.back()}
+// === PRIVAT ===
 function openPrivat(){
-  window.open("https://www.privat24.ua/send/ijak6","_blank")
+  window.open("https://www.privat24.ua/send/ijak6", "_blank");
 }
-function emailInput(){return document.getElementById("email")}
-function passInput(){return document.getElementById("password")}
