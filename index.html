@@ -4,29 +4,29 @@
 <meta charset="UTF-8">
 <title>Лісова Пісня</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<div class="box">
-<h2>🌲 Лісова Пісня</h2>
+<div class="card">
+  <h1>🌲 Лісова Пісня</h1>
 
-<div id="loginBox">
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Пароль">
   <button onclick="login()">Увійти</button>
-</div>
 
-<div id="panel" class="hidden">
-  <p>👤 Імʼя: <b id="name"></b></p>
-  <p>🆔 ID: <b id="idd"></b></p>
-  <p>💰 Баланс: <b><span id="balance">0</span></b></p>
+  <hr>
 
-  <a href="services.html"><button>🛎 Послуги</button></a>
-  <a href="transfer.html"><button>💸 Переказ</button></a>
+  <p>👤 Імʼя: <b id="name">—</b></p>
+  <p>🆔 ID: <b id="idd">—</b></p>
+  <p>💰 Баланс: <b id="balance">0</b></p>
+  <p id="role"></p>
+
+  <button onclick="go('services.html')">🛎 Послуги</button>
+  <button onclick="go('transfer.html')">💸 Переказ</button>
+  <button onclick="openPrivat()">💳 Поповнити (Privat24)</button>
   <button onclick="logout()">🚪 Вийти</button>
-</div>
 </div>
 
 <script src="app.js"></script>
