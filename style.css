@@ -1,21 +1,26 @@
 body{
   background:#020617;
-  color:white;
+  color:#fff;
   font-family:Arial;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
 }
-.box{
-  width:360px;
-  background:#020617;
+.card{
+  max-width:420px;
+  margin:40px auto;
   padding:20px;
+  background:#020617;
   border-radius:16px;
+  box-shadow:0 0 30px #000;
 }
-button,input{
+input,button{
   width:100%;
-  margin-top:10px;
-  padding:10px;
+  padding:12px;
+  margin-top:8px;
+  border-radius:10px;
+  border:none;
 }
-.hidden{display:none}
+input{background:#0f172a;color:#fff}
+button{
+  background:#22c55e;
+  font-weight:bold;
+}
+hr{margin:15px 0;border:1px solid #0f172a}
